@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industrialix</title>
+    <link rel="stylesheet" href="style2.css">
+   <script>
+        async function compruebaUsuario(correoAdministrador){
+                const data = {
+                    correoAdministrador : correoAdministrador
+                }
+                let url1 = 'https://mosaico.app:4000/industrialix/validaAdministradorConMail'
+                const response = await fetch(url1, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors', // no-cors, *cors, same-origin
+                body: JSON.stringify(data)
+                })
+                
+                const dataFinal = await response.json();
+                let result = dataFinal.result
+                if (result == "True"){
+                    return dataFinal.message[0].correoAdministrador
+                }else{
+                    return ''
+                }
+            }
+    </script>
+</head>
+<body>        
+    <div class="cuerpo">
+        <div class="divLogo">
+            <img src="img/Industrialix_logo.png" alt="" srcset="" class="logo">
+        </div>
+        <div class="conMargen">
+            <div id="cuerpoMensaje">
+            </div>
+        </div>
+        <br>
+    </div>
+    <script>
+            function setCookie(cname, cvalue, exdays) {
+                const d = new Date();
+                d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+                let expires = "expires="+d.toUTCString();
+                document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+            }
+
+            function getCookie(cname) {
+                let name = cname + "=";
+                let ca = document.cookie.split(';');
+                for(let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+            }
+
+            async function checkCookie() {
+                let correoAdministrador = getCookie("correoAdministrador");
+                if (correoAdministrador != "") {
+                    let resultado = await compruebaUsuario(correoAdministrador)
+                    if (resultado != ''){
+                        //TRUE ponemos links
+                        creaLinks()
+                        llenaDatos()
+                    }else{
+                        //FALSE borramos cookie
+                        setCookie("correoAdministrador", '', 60);
+                        checkCookie()
+                    }
+                } else {
+                    correoAdministrador = prompt("Ingresa correo electrónico de Administrador", "");
+                    if (correoAdministrador != "" && correoAdministrador != null) {
+                        let resultado = await compruebaUsuario(correoAdministrador)
+                        if (resultado != ''){
+                            //TRUE guardamos QR y ponemos links
+                            setCookie("correoAdministrador", correoAdministrador, 60);
+                            creaLinks()
+                            llenaDatos()
+                        }else{
+                            //FALSE pagina en blanco
+                            creaMensaje()
+                        }
+                    }else{
+                        //FALSE pagina en blanco
+                        creaMensaje()
+                    }
+                }
+            }
+            
+            function creaLinks(){
+                let nuevo = document.getElementById("cuerpoMensaje")
+                nuevo.innerHTML = `
+                <p id="contador" class="texto">Registros Totales : </p>
+                <div class="espaciador"></div>
+                <div id="lista"></div>
+                <div class="espaciador">
+                    <img src="assets/img/logos.png" alt="" class="iconoLogos">
+                    <!-- <img src="assets/img/lenovo.png" alt="" class="iconoLogo">
+                    <img src="assets/img/windows11.png" alt="" class="iconoLogo">
+                    <img src="assets/img/intel.png" alt="" class="iconoLogo"> -->
+                </div>
+                </div>
+                `; 
+                
+            }
+            function creaMensaje(){
+                let nuevo = document.getElementById("cuerpoMensaje")
+                nuevo.innerHTML = `
+                    <h1>Area restringida con contraseña</h1>
+                `;     
+            }
+            (async() => {
+            // console.log('before start');
+            await checkCookie();
+            // console.log('after start');
+            })();
+        </script>
+        <script>
+            let urlServer = "https://mosaico.app:4000/industrialix/"
+        async function llenaDatos(){
+            
+            let datosRegistros
+                        try{ 
+                                let datos = await fetch(urlServer + "dameRegistrosPorDia") 
+                                let json = await datos. json()
+    
+                                if (json.statusCode = 200 ){ 
+                                        let temp = json.message
+                                        datosRegistros = temp
+                                }
+                        }catch(error){
+                            console.log({error})
+                        }
+    
+            let listaContactos = document.createElement("ul")
+            let contador = 0
+            datosRegistros.forEach(element => {
+                contador = contador + element.numRegistros
+                let renglon = document.createElement("li")
+                let str = element.numRegistros == 1 ? " invitado registrado" : " invitados registrados"    
+                let fechaTexto = ""
+                switch (element.fechaRegistro) {
+                    case "10/11/2022":
+                        fechaTexto = "Jueves 10 de Noviembre"
+                        break;
+                    case "11/11/2022":
+                        fechaTexto = "Viernes 11 de Noviembre"
+                        break;
+                    case "12/11/2022":
+                        fechaTexto = "Sábado 12 de Noviembre"
+                        break;
+                    case "13/11/2022":
+                        fechaTexto = "Domingo 13 de Noviembre"
+                        break;
+                    case "14/11/2022":
+                        fechaTexto = "Lunes 14 de Noviembre"
+                        break;
+                    case "15/11/2022":
+                        fechaTexto = "Martes 15 de Noviembre"
+                        break;
+                    case "16/11/2022":
+                        fechaTexto = "Miércoles 16 de Noviembre"
+                        break;
+                    case "17/11/2022":
+                        fechaTexto = "Jueves 17 de Noviembre"
+                        break;
+                    case "18/11/2022":
+                        fechaTexto = "Viernes 18 de Noviembre"
+                        break;
+                    case "19/11/2022":
+                        fechaTexto = "Sábado 19 de Noviembre"
+                        break;
+                    case "20/11/2022":
+                        fechaTexto = "Domingo 20 de Noviembre"
+                        break;
+                    case "21/11/2022":
+                        fechaTexto = "Lunes 21 de Noviembre"
+                        break;
+                    case "22/11/2022":
+                        fechaTexto = "Martes 22 de Noviembre"
+                        break;
+                    case "23/11/2022":
+                        fechaTexto = "Miércoles 23 de Noviembre"
+                        break;
+                    case "24/11/2022":
+                        fechaTexto = "Jueves 24 de Noviembre"
+                        break;
+                    case "25/11/2022":
+                        fechaTexto = "Viernes 25 de Noviembre"
+                        break;
+                    case "26/11/2022":
+                        fechaTexto = "Sábado 26 de Noviembre"
+                        break;
+                    case "27/11/2022":
+                        fechaTexto = "Domingo 27 de Noviembre"
+                        break;
+                    case "28/11/2022":
+                        fechaTexto = "Lunes 28 de Noviembre"
+                        break;
+                   default:
+                        break;
+                }
+    
+                renglon.innerHTML = "<B>" + fechaTexto + "</B>  ➡  " + element.numRegistros + str + " 📄"
+                renglon.className = "textoExplicacion"
+                // renglon.onclick = verDetalle(element);
+                renglon.addEventListener('click', verDetalleBind.bind(this,element))
+                listaContactos.appendChild(renglon)
+            });
+            let totalRegistros = document.getElementById("contador").innerHTML = "Registros Totales : " + contador + " personas" 
+            let padreLista = document.getElementById("lista")
+            padreLista.innerHTML = ""
+            padreLista.appendChild(listaContactos)
+        }
+    
+       async function verDetalleBind(element){
+            let datosRegistros
+            try{ 
+                    let datos = await fetch(urlServer + "dameRegistrosPorDia?diaEspecifico=" + element.fechaRegistro) 
+                    let json = await datos. json()
+    
+                    if (json.statusCode = 200 ){ 
+                            let temp = json.message
+                            datosRegistros = temp
+                    }
+            }catch(error){
+                console.log({error})
+            }
+    
+            let listaContactos = document.createElement("ul")
+            datosRegistros.forEach(element => {
+                let renglon = document.createElement("li")
+                renglon.innerHTML = "<B>" + element.nombreUsuario + "</B>   ➡  " + element.empresaUsuario 
+                renglon.className = "textoExplicacion"
+                // renglon.onclick = verDetalle(element);
+                // renglon.addEventListener('click', verDetalleBind.bind(this,element))
+                listaContactos.appendChild(renglon)
+            });
+    
+            let padreLista = document.getElementById("lista")
+            padreLista.innerHTML = ""
+            padreLista.appendChild(listaContactos)
+    
+            let regresar = document.createElement("button")
+                    regresar.innerHTML = "Regresar"
+                    regresar.className = "botonRegistrarse"
+                    regresar.onclick = function(){
+                        llenaDatos()
+                    }
+                    padreLista.appendChild(regresar)
+        }
+        </script>
+</body>
+</html>
