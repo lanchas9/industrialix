@@ -320,7 +320,7 @@
                         }
                     break;
                 case tipoValidaciones.esNumero: 
-                        if( isNumeric(str) ){
+                        if( !isNumeric(str) ){
                             respuesta = `El campo ${campo} no tiene el formato numerico`
                         }
                     break;
