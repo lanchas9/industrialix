@@ -14,14 +14,14 @@
         <div id="detalleUsuario">
             <p class="elmentoFormularioTitulo2 centrado"> Nombre completo: </p>
             <p class="titulo" id="nombreCompleto"></p>
-            <p class="elmentoFormularioTitulo2 centrado"> Telefono oficina: </p>
+            <!-- <p class="elmentoFormularioTitulo2 centrado"> Telefono oficina: </p>
             <input class="titulo" id="telefono1Usuario"></input>
             <p class="elmentoFormularioTitulo2 centrado"> extension: </p>
             <input class="titulo" id="extensionTelefono1Usuario"></input>
             <p class="elmentoFormularioTitulo2 centrado"> Celular: </p>
             <input class="titulo" id="telefono2Usuario"></input>
             <br><br><br>
-            <button id="enviar" class="titulo3" onclick="guardaDatos()">Guardar</button>
+            <button id="enviar" class="titulo3" onclick="guardaDatos()">Guardar</button> -->
             <img src="img/listo.png" alt="" class="imagen" id="iconoAcceso">
         </div>
         <br>
@@ -88,7 +88,7 @@
             return resul;
         }
     }
-
+        let largoCodigoQR = 36
         async function creaEventosTeclado(){
             addEvent(document, "keypress", function (e) {
                 e = e || window.event;
@@ -101,7 +101,7 @@
                 console.log({keyCode})
                 // strInput += e.key
                 // index +=1
-                let largoCodigoQR = 99
+                largoCodigoQR = 99
                 if (e.keyCode == 13) {
                     largoCodigoQR = strInput.length
                 }
@@ -213,7 +213,7 @@
 
             let icono = document.getElementById("iconoAcceso")
             icono.src = "img/verde.png"
-            statusValidado = true
+            //statusValidado = true
 
         }
 

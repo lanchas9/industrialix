@@ -321,7 +321,9 @@
                     break;
                 case tipoValidaciones.esNumero: 
                         if( !isNumeric(str) ){
-                            respuesta = `El campo ${campo} no tiene el formato numerico`
+                            if(obligatorio==1){
+                                respuesta = `El campo ${campo} no tiene el formato numerico`
+                            }
                         }
                     break;
                 case tipoValidaciones.email: 
@@ -335,7 +337,9 @@
                     break;
                 case tipoValidaciones.celular: 
                         if( !isNumeric(str) || str.length != 10 ){
-                            respuesta = `El campo ${campo} no tiene el formato correcto, use únicamente 10 digitos`
+                            if(obligatorio==1){
+                                respuesta = `El campo ${campo} no tiene el formato correcto, use únicamente 10 digitos`
+                            }
                         }
                     break;
                 case tipoValidaciones.paginaWeb: 
